@@ -1,15 +1,15 @@
 import type * as express from 'express';
 import ErrorThrower from '../../global/interface/ErrorThrower';
 import { resCodes } from '../../global/utils/resCode';
-import SubRouteNameReqBody from '../reqBodyClass/SubRouteNameReqBody';
+import UserRegReqBody from '../reqBodyClass/UserRegReqBody';
 
-export default async function subRouteName(
+export default async function registerUser(
 	req: express.Request,
 	res: express.Response,
 ): Promise<express.Response> {
 	const reqBody = req.body;
 	try {
-		if (!SubRouteNameReqBody.isValid(reqBody)) {
+		if (!UserRegReqBody.isValid(reqBody)) {
 			throw new ErrorThrower(
 				'Invalid Body Request',
 				resCodes.BAD_REQUEST.code,

@@ -1,7 +1,8 @@
 import * as express from 'express';
 import * as functions from 'firebase-functions';
 import Middleware from './global/middleware/Middleware';
-import subRouteName from './subRouteName/endpoint/endpoint';
+import registerUser from './subRouteName/endpoint/endpoint';
+
 
 const app = express();
 Middleware.initAdminSDK();
@@ -10,8 +11,8 @@ app.use(Middleware.verifyHeaders);
 app.use(Middleware.verifyApiKey);
 
 // API Endpoints:
-app.post('/subRouteName', subRouteName);
+app.post('/registerUser', registerUser);
 
 // Export to Firebase Cloud Functions:
-const routePrefixName = functions.https.onRequest(app);
-export { routePrefixName };
+const userService = functions.https.onRequest(app);
+export { userService };
