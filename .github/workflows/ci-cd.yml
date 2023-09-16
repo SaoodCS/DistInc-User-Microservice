@@ -1,4 +1,4 @@
-name: User Microservice CI/CD
+name: User Microservice CI/CD Pipeline
 
 on:
   push:
