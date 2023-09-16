@@ -1,8 +1,7 @@
 import * as express from 'express';
 import * as functions from 'firebase-functions';
 import Middleware from './global/middleware/Middleware';
-import registerUser from './subRouteName/endpoint/endpoint';
-
+import registerUser from './registerUser/endpoint/endpoint';
 
 const app = express();
 Middleware.initAdminSDK();
