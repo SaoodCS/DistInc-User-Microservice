@@ -1,5 +1,8 @@
 import type * as express from 'express';
+import isErrorThrower from '../../global/helpers/errorCheckers/isErrorThrower';
 import { isFirebaseError } from '../../global/helpers/errorCheckers/isFirebaseError';
+import handleErrorThrower from '../../global/helpers/errorHandlers/handleErrorThrower';
+import handleFirebaseError from '../../global/helpers/errorHandlers/handleFirebaseError';
 import ErrorThrower from '../../global/interface/ErrorThrower';
 import auth from '../../global/utils/auth';
 import CollectionRef from '../../global/utils/CollectionRef';
@@ -40,13 +43,21 @@ export default async function registerUser(
 				message: 'Email already exists',
 			});
 		}
-		const { userDeleted, error } = await deleteUser(reqBody.email);
+		const { userDeleted, error: delErr } = await deleteUser(reqBody.email);
+
+		if (!userDeleted) {
+			return res.status(resCodes.INTERNAL_SERVER.code).send(delErr);
+		}
+
+		if (isFirebaseError(err)) {
+			return handleFirebaseError(err, res);
+		}
+
+		if (isErrorThrower(err)) {
+			return handleErrorThrower(err, res);
+		}
 		return res
 			.status(resCodes.INTERNAL_SERVER.code)
-			.send(
-				`Error creating user: ${err}. Deleted: ${userDeleted} - ${
-					error || null
-				}`,
-			);
+			.send(`Error creating new user : ${err}`);
 	}
 }
