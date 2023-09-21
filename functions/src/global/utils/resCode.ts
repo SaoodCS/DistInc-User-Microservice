@@ -15,6 +15,10 @@ export const resCodes = {
 		code: 404,
 		prefix: 'Client (Not Found)',
 	},
+	CONFLICT: {
+		code: 409,
+		prefix: 'Client (Conflict)',
+	},
 	INTERNAL_SERVER: {
 		code: 500,
 		prefix: 'Server (Internal Server)',
