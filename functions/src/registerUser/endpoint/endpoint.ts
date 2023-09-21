@@ -31,7 +31,6 @@ export default async function registerUser(
 
 		await CollectionRef.userDetails.doc(uid).set({
 			email: reqBody.email,
-			password: reqBody.password,
 		});
 
 		return res
