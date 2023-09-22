@@ -1,5 +1,5 @@
 interface HelperError {
-	error: string;
+   error: string;
 }
 
 export default HelperError;

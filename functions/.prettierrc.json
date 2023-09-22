@@ -1,7 +1,9 @@
 {
-	"tabWidth": 4,
-	"useTabs": true,
+	"tabWidth": 3,
 	"singleQuote": true,
 	"semi": true,
-	"endOfLine": "auto"
-}
+	"endOfLine": "auto",
+	"bracketSpacing": true,
+	"printWidth": 100
+ }
+ 

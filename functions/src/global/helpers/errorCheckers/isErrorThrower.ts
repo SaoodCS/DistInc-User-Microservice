@@ -3,5 +3,5 @@
 import ErrorThrower from '../../interface/ErrorThrower';
 
 export default function isErrorThrower(error: unknown): error is ErrorThrower {
-	return error instanceof ErrorThrower;
+   return error instanceof ErrorThrower;
 }
