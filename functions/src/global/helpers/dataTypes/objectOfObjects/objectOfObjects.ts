@@ -1,12 +1,12 @@
-import type HelperError from '../../../interface/IHelperError';
+import type IObjWithErrProp from '../../../interface/IObjWithErrProp';
 
 export default class ObjectOfObjects {
    static findObjectByKeyValue<T, K extends keyof T>(
       object: Record<string, T>,
       key: K,
       value: T[K],
-   ): T | HelperError {
-      const errorObj: HelperError = {
+   ): T | IObjWithErrProp {
+      const errorObj: IObjWithErrProp = {
          error: `findObjectByKeyValue: No object found with key '${String(
             key,
          )}' and value '${value}'`,

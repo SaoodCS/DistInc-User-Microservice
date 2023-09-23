@@ -33,14 +33,12 @@ export default async function registerUser(
       return res.status(resCodes.OK.code).send({ message: 'User registered successfully' });
    } catch (err: unknown) {
       if (isFirebaseError(err) && err.code === 'auth/email-already-exists') {
-         return res.status(resCodes.CONFLICT.code).send({
-            message: 'Email already exists',
-         });
+         return res.status(resCodes.CONFLICT.code).send({ error: 'Email already exists' });
       }
       const { userDeleted, error: delErr } = await deleteUser(reqBody.email);
 
       if (!userDeleted) {
-         return res.status(resCodes.INTERNAL_SERVER.code).send(delErr);
+         return res.status(resCodes.INTERNAL_SERVER.code).send({ error: delErr });
       }
 
       if (isFirebaseError(err)) {
@@ -50,6 +48,8 @@ export default async function registerUser(
       if (isErrorThrower(err)) {
          return handleErrorThrower(err, res);
       }
-      return res.status(resCodes.INTERNAL_SERVER.code).send(`Error creating new user : ${err}`);
+      return res
+         .status(resCodes.INTERNAL_SERVER.code)
+         .send({ error: `Error creating new user : ${err}` });
    }
 }

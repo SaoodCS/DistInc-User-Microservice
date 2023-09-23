@@ -1,5 +1,6 @@
 import type * as express from 'express';
 import type { FirebaseError } from 'firebase-admin';
+import type IObjWithErrProp from '../../interface/IObjWithErrProp';
 import { resCodes } from '../../utils/resCode';
 
 const firebaseErrorCodeToMessage: Record<string, string> = {
@@ -18,7 +19,7 @@ const firebaseErrorCodeToMessage: Record<string, string> = {
 
 export default function handleFirebaseError(
    error: FirebaseError,
-   res: express.Response<string>,
+   res: express.Response<IObjWithErrProp>,
 ): express.Response {
    let constructedMsg: string;
    if (error.code in firebaseErrorCodeToMessage) {
@@ -26,5 +27,5 @@ export default function handleFirebaseError(
    } else {
       constructedMsg = error.message;
    }
-   return res.status(resCodes.BAD_REQUEST.code).send(constructedMsg);
+   return res.status(resCodes.BAD_REQUEST.code).send({ error: constructedMsg });
 }
