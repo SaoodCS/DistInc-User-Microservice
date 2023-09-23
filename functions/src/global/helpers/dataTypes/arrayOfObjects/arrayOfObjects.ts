@@ -1,5 +1,5 @@
 import type IObjWithErrProp from '../../../interface/IObjWithErrProp';
-import { hasErrorProp } from '../../errorCheckers/hasErrorProp';
+import ErrorChecker from '../../errorCheckers/ErrorCheckers';
 
 class ArrayOfObjects {
    public static objectsWithVal<T>(array: T[], propertyValue: T[keyof T]): T[] | IObjWithErrProp {
@@ -23,7 +23,7 @@ class ArrayOfObjects {
       propertyValue: T[keyof T],
    ): T | undefined | { error: string } {
       const object = this.objectsWithVal(array, propertyValue);
-      if (hasErrorProp(object)) return object;
+      if (ErrorChecker.hasErrorProp(object)) return object;
       if (object.length > 1) {
          return {
             error: `Multiple Objects Found With Val: ${propertyValue}.`,
