@@ -1,6 +1,8 @@
 import type * as express from 'express';
 import ErrorChecker from '../../global/helpers/errorCheckers/ErrorCheckers';
 import ErrorHandler from '../../global/helpers/errorHandlers/ErrorHandler';
+import deleteUserData from '../../global/helpers/firebase/deleteUserData';
+import getUidFromEmail from '../../global/helpers/firebase/getUidFromEmail';
 import ErrorThrower from '../../global/interface/ErrorThrower';
 import { resCodes } from '../../global/utils/resCode';
 import ResetUserReqBody from '../reqBodyClass/ResetUserReqBody';
@@ -14,14 +16,20 @@ export default async function resetUser(
       if (!ResetUserReqBody.isValid(reqBody)) {
          throw new ErrorThrower('Invalid Body Request', resCodes.BAD_REQUEST.code);
       }
-      return res.status(200).send({ message: 'Empty Cloud Function' });
-   } catch (error: unknown) {
-      // Error handling code for caught errors here
 
+      const { uid } = await getUidFromEmail(reqBody.email);
+      if (uid) {
+         const { userDataDeleted, error: dataDelErr } = await deleteUserData(uid);
+         if (!userDataDeleted) {
+            throw new ErrorThrower(JSON.stringify(dataDelErr), resCodes.INTERNAL_SERVER.code);
+         }
+      }
+
+      return res.status(200).send({ message: "Successfully Reset User's Account" });
+   } catch (error: unknown) {
       if (ErrorChecker.isErrorThrower(error)) {
          return ErrorHandler.handleErrorThrower(error, res);
       }
-
       return res.status(resCodes.INTERNAL_SERVER.code).send({ error: error });
    }
 }

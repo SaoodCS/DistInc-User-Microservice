@@ -1,12 +1,14 @@
 import type * as express from 'express';
 import ErrorChecker from '../../global/helpers/errorCheckers/ErrorCheckers';
 import ErrorHandler from '../../global/helpers/errorHandlers/ErrorHandler';
+import deleteUserData from '../../global/helpers/firebase/deleteUserData';
+import getUidFromEmail from '../../global/helpers/firebase/getUidFromEmail';
 import ErrorThrower from '../../global/interface/ErrorThrower';
 import CollectionRef from '../../global/utils/CollectionRef';
 import auth from '../../global/utils/auth';
 import { resCodes } from '../../global/utils/resCode';
-import deleteUser from '../helpers/helpers';
 import UserRegReqBody from '../reqBodyClass/UserRegReqBody';
+import deleteUserAccount from '../../global/helpers/firebase/deleteUserAccount';
 
 export default async function registerUser(
    req: express.Request,
@@ -33,10 +35,16 @@ export default async function registerUser(
       if (ErrorChecker.isFirebaseError(err) && err.code === 'auth/email-already-exists') {
          return res.status(resCodes.CONFLICT.code).send({ error: 'Email already exists' });
       }
-      const { userDeleted, error: delErr } = await deleteUser(reqBody.email);
-
-      if (!userDeleted) {
-         return res.status(resCodes.INTERNAL_SERVER.code).send({ error: delErr });
+      const { uid } = await getUidFromEmail(reqBody.email);
+      if (uid) {
+         const { userDataDeleted, error: dataDelErr } = await deleteUserData(uid);
+         if (!userDataDeleted) {
+            return res.status(resCodes.INTERNAL_SERVER.code).send({ error: dataDelErr });
+         }
+         const { userDeleted, error: delErr } = await deleteUserAccount(reqBody.email);
+         if (!userDeleted) {
+            return res.status(resCodes.INTERNAL_SERVER.code).send({ error: delErr });
+         }
       }
 
       if (ErrorChecker.isFirebaseError(err)) {
