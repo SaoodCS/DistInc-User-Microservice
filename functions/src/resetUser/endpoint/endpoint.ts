@@ -3,6 +3,7 @@ import ErrorChecker from '../../global/helpers/errorCheckers/ErrorCheckers';
 import ErrorHandler from '../../global/helpers/errorHandlers/ErrorHandler';
 import deleteUserData from '../../global/helpers/firebase/deleteUserData';
 import getUidFromEmail from '../../global/helpers/firebase/getUidFromEmail';
+import setUserData from '../../global/helpers/firebase/setUserData';
 import ErrorThrower from '../../global/interface/ErrorThrower';
 import { resCodes } from '../../global/utils/resCode';
 import ResetUserReqBody from '../reqBodyClass/ResetUserReqBody';
@@ -22,6 +23,10 @@ export default async function resetUser(
          const { userDataDeleted, error: dataDelErr } = await deleteUserData(uid);
          if (!userDataDeleted) {
             throw new ErrorThrower(JSON.stringify(dataDelErr), resCodes.INTERNAL_SERVER.code);
+         }
+         const { userDataSetted, error: dataSetErr } = await setUserData(uid, reqBody.email);
+         if (!userDataSetted) {
+            throw new ErrorThrower(JSON.stringify(dataSetErr), resCodes.INTERNAL_SERVER.code);
          }
       }
 
