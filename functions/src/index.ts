@@ -16,6 +16,6 @@ app.post('/registerUser', registerUser);
 app.post('/deleteUser', deleteUser);
 app.post('/resetUser', resetUser);
 
-// Export to Firebase Cloud Functions:
+// Export Microservice:
 const userService = functions.https.onRequest(app);
 export { userService };
