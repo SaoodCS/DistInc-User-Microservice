@@ -5,9 +5,7 @@ interface IDeleteUserReturn {
    error?: unknown;
 }
 
-export default async function deleteUserAccount(
-   userEmail: string,
-): Promise<IDeleteUserReturn> {
+export default async function deleteUserAccount(userEmail: string): Promise<IDeleteUserReturn> {
    try {
       const user = await auth.getUserByEmail(userEmail);
       if (!user) {
