@@ -16,8 +16,5 @@
   "engines": {
     "node": "20"
   },
-  "devDependencies": {
-    "firebase-tools": "^15.22.4"
-  },
   "private": true
 }
